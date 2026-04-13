@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bibliothèque de Léane</title>
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center;
+           justify-content: center; min-height: 100vh; margin: 0;
+           background: #0c0a14; color: #7c6fa0; text-align: center; }
+    .icon { font-size: 3rem; margin-bottom: 16px; }
+    h1 { color: #a78bfa; font-size: 1.2rem; margin: 0 0 8px; }
+    p  { font-size: .85rem; margin: 0; }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="icon">📚</div>
+    <h1>Chargement de la bibliothèque…</h1>
+    <p id="msg"></p>
+  </div>
+  <script>
+    fetch('https://gist.githubusercontent.com/SouldeGit/c3f1cafabbf733835e470c8f7ec44c21/raw/tunnel.json?t=' + Date.now())
+      .then(r => r.json())
+      .then(d => {
+        if (d.url) {
+          window.location.replace(d.url + '/jeunesse');
+        } else {
+          document.querySelector('h1').textContent = 'La bibliothèque est fermée pour le moment';
+          document.getElementById('msg').textContent = 'Réessaie dans quelques minutes \uD83D\uDE0A';
+        }
+      })
+      .catch(() => {
+        document.querySelector('h1').textContent = 'La bibliothèque est hors ligne';
+        document.getElementById('msg').textContent = 'Réessaie dans quelques minutes \uD83D\uDE0A';
+      });
+  </script>
+</body>
+</html>
