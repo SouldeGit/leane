@@ -5,89 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Bibliothèque de Léane</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: sans-serif;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh;
-      background: #0c0a14; color: #7c6fa0;
-      text-align: center; padding: 24px;
-    }
-    .card {
-      background: #1a1528; border: 1px solid #2d2445;
-      border-radius: 20px; padding: 36px 28px;
-      max-width: 340px; width: 100%;
-    }
-    .icon { font-size: 3.5rem; margin-bottom: 16px; }
-    h1 { color: #e8e0f0; font-size: 1.3rem; margin-bottom: 6px; }
-    .sub { font-size: 0.82rem; color: #5a4f72; margin-bottom: 28px; }
-
-    .btn {
-      display: block; width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #7c3aed, #a78bfa);
-      color: #fff; font-size: 1.05rem; font-weight: 700;
-      border: none; border-radius: 14px; cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 18px rgba(124,58,237,0.4);
-    }
-    .btn:active { transform: scale(0.97); }
-
-    .offline {
-      display: none; margin-top: 20px;
-      background: #2a0d0d; color: #e63946;
-      border-radius: 10px; padding: 12px 16px;
-      font-size: 0.82rem;
-    }
-    .loading { color: #5a4f72; font-size: 0.82rem; margin-top: 16px; }
+    body { font-family: sans-serif; display: flex; align-items: center;
+           justify-content: center; min-height: 100vh; margin: 0;
+           background: #0c0a14; color: #7c6fa0; text-align: center; }
+    .icon { font-size: 3rem; margin-bottom: 16px; }
+    h1 { color: #a78bfa; font-size: 1.2rem; margin: 0 0 8px; }
+    p  { font-size: .85rem; margin: 0; }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div>
     <div class="icon">📚</div>
-    <h1>La Bibliothèque de Léane</h1>
-    <p class="sub">Ta bibliothèque personnelle</p>
-
-    <a class="btn" id="btn" href="#" onclick="return openLib()">
-      Ouvrir ma bibliothèque ✨
-    </a>
-
-    <p class="loading" id="loading">Vérification en cours…</p>
-    <div class="offline" id="offline">
-      La bibliothèque est fermée pour le moment.<br>
-      Réessaie dans quelques minutes 😊
-    </div>
+    <h1>Chargement de la bibliothèque…</h1>
+    <p id="msg"></p>
   </div>
-
   <script>
-    var tunnelUrl = null;
-
     fetch('https://gist.githubusercontent.com/SouldeGit/c3f1cafabbf733835e470c8f7ec44c21/raw/tunnel.json?t=' + Date.now())
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        document.getElementById('loading').style.display = 'none';
+      .then(r => r.json())
+      .then(d => {
         if (d.url) {
-          tunnelUrl = d.url;
+          window.location.replace(d.url + '/jeunesse');
         } else {
-          document.getElementById('btn').style.opacity = '0.4';
-          document.getElementById('btn').style.pointerEvents = 'none';
-          document.getElementById('offline').style.display = 'block';
+          document.querySelector('h1').textContent = 'La bibliothèque est fermée pour le moment';
+          document.getElementById('msg').textContent = 'Réessaie dans quelques minutes \uD83D\uDE0A';
         }
       })
-      .catch(function() {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('btn').style.opacity = '0.4';
-        document.getElementById('btn').style.pointerEvents = 'none';
-        document.getElementById('offline').style.display = 'block';
+      .catch(() => {
+        document.querySelector('h1').textContent = 'La bibliothèque est hors ligne';
+        document.getElementById('msg').textContent = 'Réessaie dans quelques minutes \uD83D\uDE0A';
       });
-
-    function openLib() {
-      if (tunnelUrl) {
-        window.location.href = tunnelUrl + '/jeunesse';
-      }
-      return false;
-    }
   </script>
 </body>
 </html>
